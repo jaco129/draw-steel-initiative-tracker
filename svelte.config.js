@@ -3,21 +3,13 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  preprocess: vitePreprocess(),
-
   kit: {
-    adapter: adapter({
-      // default options are shown
-      pages: 'build',
-      assets: 'build',
-      fallback: undefined,
-      precompress: false,
-      strict: true
-    }),
+    adapter: adapter(),
 	paths: {
 		base: process.env.NODE_ENV === 'production' ? '/draw-steel-initiative-tracker' : '',
 	}
-  }
+  },
+  preprocess: vitePreprocess()
 };
 
 export default config;
