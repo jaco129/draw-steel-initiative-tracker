@@ -1,6 +1,7 @@
 <script lang="ts">
     import { characters, currentRound, characterStore } from '$lib/stores/characterStore';
-    
+    import { base } from '$app/paths';
+
     let newName = '';
     let isHero = true; // New variable to track toggle state
     $: selectedType = isHero ? 'hero' : 'villain'; // Derive character type from toggle
@@ -35,6 +36,8 @@
 
     $: safeCharacters = Array.isArray($characters) ? $characters : []; // Ensure $characters is always an array
 </script>
+
+<a href="{base}/">Home</a>
 
 <div class="min-h-screen bg-gray-900 text-gray-100 p-4">
     <div class="container mx-auto max-w-lg">
