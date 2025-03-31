@@ -4,7 +4,9 @@
     
     let newName = '';
     let selectedType: CharacterType = 'hero';
-    
+    let firstTurn = '--'; // Default to heroes going first
+    let rolledValue: number | null = null; // Store the rolled value
+
     function handleSubmit() {
         if (newName.trim()) {
             characterStore.add(newName, selectedType);
@@ -18,27 +20,40 @@
         }
     }
 
+    function determineFirstTurn() {
+        rolledValue = Math.floor(Math.random() * 10) + 1; // Generate a number between 1 and 10
+        firstTurn = rolledValue >= 6 ? 'Heroes' : 'Villains';
+    }
+
     $: safeCharacters = Array.isArray($characters) ? $characters : []; // Ensure $characters is always an array
 </script>
 
-<div class="min-h-screen bg-gray-50 p-4">
+<div class="min-h-screen bg-gray-900 text-gray-100 p-4">
     <div class="container mx-auto max-w-lg">
         <h1 class="text-3xl font-bold mb-4 text-center">Draw Steel Initiative</h1>
         
-        <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
-            <h2 class="text-xl font-semibold text-center">Round {$currentRound}</h2>
+        <div class="bg-gray-800 p-4 rounded-lg shadow-sm mb-4 flex items-center justify-between">
+            <h2 class="text-xl font-semibold">Round {$currentRound}</h2>
+            <button 
+                on:click={determineFirstTurn}
+                class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600 active:bg-green-700 transition-colors"
+            >
+                Roll Initiative (1d10): {rolledValue ?? '--'}
+            </button>
         </div>
+        
+        <p class="text-center text-lg font-medium mb-4">First Turn: {firstTurn}</p>
         
         <form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-2 mb-6">
             <input
                 type="text"
                 bind:value={newName}
                 placeholder="Character name"
-                class="flex-1 p-3 border rounded-lg text-lg"
+                class="flex-1 p-3 border border-gray-700 bg-gray-800 rounded-lg text-lg text-gray-100 placeholder-gray-400"
             />
             <select 
                 bind:value={selectedType}
-                class="p-3 border rounded-lg bg-white text-lg"
+                class="p-3 border border-gray-700 bg-gray-800 rounded-lg text-lg text-gray-100"
             >
                 <option value="hero">Hero</option>
                 <option value="villain">Villain</option>
@@ -56,12 +71,12 @@
                 {#each safeCharacters as character (character.id)}
                     <div class={`p-6 rounded-lg shadow-sm transition-all ${
                         character.type === 'hero' 
-                            ? 'bg-blue-50 border-blue-200' 
-                            : 'bg-red-50 border-red-200'
+                            ? 'bg-gray-600 border-blue-500' 
+                            : 'bg-gray-600 border-red-500'
                     } ${character.hasTakenTurn ? 'opacity-60' : 'opacity-100'} border-2`}>
                         <div class="flex items-center justify-between">
                             <span class={`text-xl font-medium ${
-                                character.type === 'hero' ? 'text-blue-800' : 'text-red-800'
+                                character.type === 'hero' ? 'text-blue-300' : 'text-red-300'
                             }`}>
                                 {character.name}
                             </span>
@@ -75,17 +90,17 @@
                                     />
                                     <div class={`w-11 h-6 rounded-full peer 
                                         ${character.type === 'hero' 
-                                            ? 'bg-blue-200 peer-checked:bg-blue-600' 
-                                            : 'bg-red-200 peer-checked:bg-red-600'
+                                            ? 'bg-blue-400 peer-checked:bg-blue-100' 
+                                            : 'bg-red-400 peer-checked:bg-red-100'
                                         } 
                                         peer-focus:outline-none peer-focus:ring-4 
-                                        peer-focus:ring-blue-300 
+                                        peer-focus:ring-gray-700 
                                         after:content-[''] 
                                         after:absolute 
                                         after:top-[2px] 
                                         after:left-[2px] 
-                                        after:bg-white 
-                                        after:border-gray-300 
+                                        after:bg-gray-800 
+                                        after:border-gray-600 
                                         after:border 
                                         after:rounded-full 
                                         after:h-5 
@@ -96,10 +111,14 @@
                                 </label>
                                 <button
                                     on:click={() => handleDelete(character.id)}
-                                    class="text-red-500 hover:text-red-700 transition-colors p-2 rounded-full bg-white border border-red-500 shadow-sm"
+                                    class="w-8 h-8 flex items-center justify-center ml-8"
                                     title="Delete character"
                                 >
-                                    ✖
+                                    <img 
+                                        src="/trash.png" 
+                                        alt="Delete" 
+                                        class="w-full h-full object-contain opacity-60 filter grayscale"
+                                    />
                                 </button>
                             </div>
                         </div>
@@ -109,13 +128,13 @@
             
             <button
                 on:click={characterStore.nextRound}
-                class="w-full mt-6 bg-purple-500 text-white p-4 rounded-lg text-lg font-medium hover:bg-purple-600 active:bg-purple-700 transition-colors"
+                class="w-full mt-6 bg-purple-600 text-white p-4 rounded-lg text-lg font-medium hover:bg-purple-700 active:bg-purple-800 transition-colors"
             >
                 Next Round
             </button>
         {/if}
         {#if safeCharacters.length === 0}
-            <p class="text-center text-gray-500 mt-4">No characters available. Add some to get started!</p>
+            <p class="text-center text-gray-400 mt-4">No characters available. Add some to get started!</p>
         {/if}
     </div>
 </div>
