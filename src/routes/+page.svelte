@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { characters, currentRound, characterStore } from '$lib/stores/characterStore'; // Ensure correct path
-    import type { CharacterType } from '$lib/types';
+    import { characters, currentRound, characterStore } from '$lib/stores/characterStore';
     
     let newName = '';
-    let selectedType: CharacterType = 'hero';
+    let isHero = true; // New variable to track toggle state
+    $: selectedType = isHero ? 'hero' : 'villain'; // Derive character type from toggle
     let firstTurn = '--'; // Default to heroes going first
     let rolledValue: number | null = null; // Store the rolled value
 
@@ -23,6 +23,14 @@
     function determineFirstTurn() {
         rolledValue = Math.floor(Math.random() * 10) + 1; // Generate a number between 1 and 10
         firstTurn = rolledValue >= 6 ? 'Heroes' : 'Villains';
+    }
+
+    function handleReset() {
+        if (confirm('Are you sure you want to reset the encounter? This will remove all characters and reset the round counter.')) {
+            characterStore.reset();
+            firstTurn = '--';
+            rolledValue = null;
+        }
     }
 
     $: safeCharacters = Array.isArray($characters) ? $characters : []; // Ensure $characters is always an array
@@ -45,19 +53,41 @@
         <p class="text-center text-lg font-medium mb-4">First Turn: {firstTurn}</p>
         
         <form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-2 mb-6">
-            <input
-                type="text"
-                bind:value={newName}
-                placeholder="Character name"
-                class="flex-1 p-3 border border-gray-700 bg-gray-800 rounded-lg text-lg text-gray-100 placeholder-gray-400"
-            />
-            <select 
-                bind:value={selectedType}
-                class="p-3 border border-gray-700 bg-gray-800 rounded-lg text-lg text-gray-100"
-            >
-                <option value="hero">Hero</option>
-                <option value="villain">Villain</option>
-            </select>
+            <div class="flex gap-2 items-center">
+                <input
+                    type="text"
+                    bind:value={newName}
+                    placeholder="Character name"
+                    class="flex-1 p-3 border border-gray-700 bg-gray-800 rounded-lg text-lg text-gray-100 placeholder-gray-400"
+                />
+                <div class="flex items-center gap-2 p-3 border border-gray-700 bg-gray-800 rounded-lg shrink-0">
+                    <span class="text-lg text-gray-100 w-16">{isHero ? 'Hero' : 'Villain'}</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            class="sr-only peer"
+                            bind:checked={isHero}
+                        />
+                        <div class="w-11 h-6 rounded-full peer 
+                            bg-red-400 peer-checked:bg-blue-400
+                            peer-focus:outline-none peer-focus:ring-4 
+                            peer-focus:ring-gray-700 
+                            after:content-[''] 
+                            after:absolute 
+                            after:top-[2px] 
+                            after:left-[2px] 
+                            after:bg-gray-800 
+                            after:border-gray-600 
+                            after:border 
+                            after:rounded-full 
+                            after:h-5 
+                            after:w-5 
+                            after:transition-all 
+                            peer-checked:after:translate-x-full">
+                        </div>
+                    </label>
+                </div>
+            </div>
             <button 
                 type="submit"
                 class="bg-blue-500 text-white p-3 rounded-lg text-lg font-medium hover:bg-blue-600 active:bg-blue-700 transition-colors"
@@ -136,5 +166,12 @@
         {#if safeCharacters.length === 0}
             <p class="text-center text-gray-400 mt-4">No characters available. Add some to get started!</p>
         {/if}
+
+        <button
+            on:click={handleReset}
+            class="w-full mt-6 bg-red-600 text-white p-2 rounded-lg text-sm font-medium hover:bg-red-700 active:bg-red-800 transition-colors"
+        >
+            Reset Encounter
+        </button>
     </div>
 </div>
