@@ -37,8 +37,6 @@
     $: safeCharacters = Array.isArray($characters) ? $characters : []; // Ensure $characters is always an array
 </script>
 
-<a href="{base}/">Home</a>
-
 <div class="min-h-screen bg-gray-900 text-gray-100 p-4">
     <div class="container mx-auto max-w-lg">
         <h1 class="text-3xl font-bold mb-4 text-center">Draw Steel Initiative</h1>
@@ -53,7 +51,7 @@
             </button>
         </div>
         
-        <p class="text-center text-lg font-medium mb-4">First Turn: {firstTurn}</p>
+        <p class="text-center text-lg font-medium mb-4">{firstTurn} act first!</p>
         
         <form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-2 mb-6">
             <div class="flex gap-2 items-center">
@@ -64,7 +62,7 @@
                     class="flex-1 p-3 border border-gray-700 bg-gray-800 rounded-lg text-lg text-gray-100 placeholder-gray-400"
                 />
                 <div class="flex items-center gap-2 p-3 border border-gray-700 bg-gray-800 rounded-lg shrink-0">
-                    <span class="text-lg text-gray-100 w-16">{isHero ? 'Hero' : 'Villain'}</span>
+                    <span class="text-lg text-gray-100 w-16 hidden sm:inline">{isHero ? 'Hero' : 'Villain'}</span>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input 
                             type="checkbox" 
