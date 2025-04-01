@@ -15,14 +15,17 @@ const defaultCharacters = [
 // Function to safely get stored data
 const getStoredData = () => {
     if (typeof window === 'undefined') {
-        return { characters: defaultCharacters, round: 1 };
+        return {
+            characters: process.env.NODE_ENV === 'production' ? [] : defaultCharacters, // Use empty array in production
+            round: 1
+        };
     }
 
     const storedCharacters = window.localStorage.getItem('characters');
     const storedRound = window.localStorage.getItem('currentRound');
 
     return {
-        characters: storedCharacters ? JSON.parse(storedCharacters) : defaultCharacters,
+        characters: storedCharacters ? JSON.parse(storedCharacters) : (process.env.NODE_ENV === 'production' ? [] : defaultCharacters),
         round: storedRound ? parseInt(storedRound) : 1
     };
 };
