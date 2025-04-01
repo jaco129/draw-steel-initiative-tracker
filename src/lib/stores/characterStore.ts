@@ -45,12 +45,12 @@ if (typeof window !== 'undefined') {
 
 export const characterStore = {
     add: (name: string, type: CharacterType) => {
-        characters.update(chars => [...chars, {
+        characters.update(chars => [{
             id: uuidv4(), // Use uuidv4 instead of crypto.randomUUID
             name,
             type,
             hasTakenTurn: false
-        }]);
+        }, ...chars]); // Prepend the new character to the array
     },
     
     toggleTurn: (id: string) => {

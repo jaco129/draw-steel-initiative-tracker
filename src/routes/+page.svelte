@@ -7,11 +7,15 @@
     $: selectedType = isHero ? 'hero' : 'villain'; // Derive character type from toggle
     let firstTurn = '--'; // Default to heroes going first
     let rolledValue: number | null = null; // Store the rolled value
+    let numberOfCharacters = 1; // New variable to track the selected number of characters to add
 
     function handleSubmit() {
         if (newName.trim()) {
-            characterStore.add(newName, selectedType);
+            for (let i = 0; i < numberOfCharacters; i++) {
+                characterStore.add(`${newName}${numberOfCharacters > 1 ? ` ${i + 1}` : ''}`, selectedType);
+            }
             newName = '';
+            numberOfCharacters = 1; // Reset the selector to 1
         }
     }
 
@@ -51,7 +55,9 @@
             </button>
         </div>
         
-        <p class="text-center text-lg font-medium mb-4">{firstTurn} act first!</p>
+        {#if rolledValue !== null}
+            <p class="text-center text-lg font-medium mb-4">{firstTurn} act first!</p>
+        {/if}
         
         <form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-2 mb-6">
             <div class="flex gap-2 items-center">
@@ -89,12 +95,24 @@
                     </label>
                 </div>
             </div>
-            <button 
-                type="submit"
-                class="bg-blue-500 text-white p-3 rounded-lg text-lg font-medium hover:bg-blue-600 active:bg-blue-700 transition-colors"
-            >
-                Add
-            </button>
+            <div class="flex gap-2 items-center">
+                <label for="numberOfCharacters" class="text-gray-100 text-lg">#</label>
+                <select
+                    id="numberOfCharacters"
+                    bind:value={numberOfCharacters}
+                    class="p-3 border border-gray-700 bg-gray-800 rounded-lg text-lg text-gray-100"
+                >
+                    {#each Array.from({ length: 10 }, (_, i) => i + 1) as num}
+                        <option value={num}>{num}</option>
+                    {/each}
+                </select>
+                <button 
+                    type="submit"
+                    class="bg-blue-500 text-white p-3 rounded-lg text-lg font-medium hover:bg-blue-600 active:bg-blue-700 transition-colors flex-grow"
+                >
+                    Add
+                </button>
+            </div>
         </form>
         
         {#if safeCharacters.length > 0}
