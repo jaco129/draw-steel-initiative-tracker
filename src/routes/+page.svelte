@@ -1,5 +1,6 @@
 <script lang="ts">
     import { characters, currentRound, characterStore } from '$lib/stores/characterStore';
+    import { base } from '$app/paths'; // Import base from $app/paths
 
     let newName = '';
     let isHero = true; // New variable to track toggle state
