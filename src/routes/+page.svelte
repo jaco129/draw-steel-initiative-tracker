@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { characters, currentRound, characterStore } from '$lib/stores/characterStore.ts';
+    import { characters, currentRound, characterStore } from '$lib/stores/characterStore';
 
     let newName = '';
     let isHero = true; // New variable to track toggle state
