@@ -118,7 +118,7 @@
         {#if safeCharacters.length > 0}
             <div class="space-y-3">
                 {#each safeCharacters as character (character.id)}
-                    <div class={`p-6 rounded-lg shadow-sm transition-all ${
+                    <div class={`p-4 rounded-lg shadow-sm transition-all ${
                         character.type === 'hero' 
                             ? 'bg-gray-600 border-blue-500' 
                             : 'bg-gray-600 border-red-500'
