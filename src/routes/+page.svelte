@@ -148,7 +148,7 @@
                                     title="Delete character"
                                 >
                                     <img 
-                                        src="/trash.png" 
+                                        src="{base}/trash.png" 
                                         alt="Delete" 
                                         class="w-full h-full object-contain opacity-60 filter grayscale"
                                     />

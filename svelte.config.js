@@ -4,10 +4,15 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   kit: {
-    adapter: adapter(),
-	paths: {
-		base: '/draw-steel-initiative-tracker',
-	}
+    adapter: adapter({
+      pages: 'build',
+      assets: 'build',
+      fallback: 'index.html',
+      strict: true
+    }),
+    paths: {
+      base: '/draw-steel-initiative-tracker'
+    }
   },
   preprocess: vitePreprocess()
 };
